@@ -509,7 +509,22 @@ const deleteMutation = gql`
   }
 `
 
-const PostWithMutation = graphql(deleteMutation)(Post)
+const PostWithMutation = graphql(deleteMutation, {
+  props: ({ ownProps, mutate }) => ({
+    deletePost: ({ id }) =>
+      mutate({
+        variables: { id },
+      })
+  })
+})(Post)
+```
+
+Let's implement `handleDelete` method on our `Post` component:
+
+```js
+  this.props.deletePost({ id: this.props.post.id }).then(() => {
+    this.props.refresh()
+  })
 ```
 
 Finally, we need to adjust the `export` statement like so:
